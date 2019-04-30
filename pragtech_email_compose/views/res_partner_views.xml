@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record model="ir.ui.view" id="res_partner_form_inherit_send_mail">
+		<field name="name">res.partner.form.view.inherit</field>
+		<field name="model">res.partner</field>
+		<field name="inherit_id" ref="base.view_partner_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='email']" position="after">
+				<button class="fa fa-envelope-o" style="font-size:20px;color:red" name="action_send_email"
+					help="Compose Email" type="object">
+				</button>
+			</xpath>
+		</field>
+	</record>
+</odoo>
