@@ -6,12 +6,12 @@
     'website': 'http://www.pragtech.co.in',
     'category': 'Contacts',
     'summary': """This module adds compose and send mail functionality in customer master""",
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'contacts'],
     'data': [
         'data/mail_data.xml',
         'views/res_partner_views.xml',
     ],
-    'installable': True,
+    'installable': True, 
     'auto_install': False,
     'application': True,
 }
