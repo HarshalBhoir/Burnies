@@ -17,15 +17,14 @@ odoo.define('pragtech_crm_activity.Activity', function(require) {
 	        args: [ids],
 	        context: (self.record && self.record.getContext()) || self.getSession().user_context,
 	    }).then(function (activities) {
-	        // convert create_date and date_deadline to moments
+	        // convert create_date, date_deadline and datetime_deadline to moments
 	        _.each(activities, function (activity) {
 	            activity.create_date = moment(time.auto_str_to_date(activity.create_date));
 	            activity.date_deadline = moment(time.auto_str_to_date(activity.date_deadline));
-	            //Ad
 	            activity.datetime_deadline = moment(time.auto_str_to_date(activity.datetime_deadline));
 	        });
 	         // sort activities by due date
-	        activities = _.sortBy(activities, 'date_deadline');
+	        activities = _.sortBy(activities, 'datetime_deadline');
 	        return activities;
 	    });
 	}
