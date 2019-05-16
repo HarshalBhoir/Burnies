@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Author      : Niova IT IVS (<https://niova.dk/>) -->
+<!-- Copyright(c): 2018-Present Niova IT IVS -->
+<!-- License URL : https://invoice-scan.com/license/ -->
+<!-- All Rights Reserved. -->
+<odoo>
+	<data>
+		<record id="vendorbill_inherit_form" model="ir.ui.view">
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="before">
+					<field name="duplicated_invoice_ids" 
+						   widget="many2many_tags"
+    					   options="{'no_create': True}"
+    					   attrs="{'invisible':['|', ('state', '!=', 'draft'), ('duplicated_invoice_ids', '=', [])]}"/>
+				</xpath>
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="voucher_company_name" attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
+				</xpath>
+				<xpath expr="//field[@name='date_due']" position="after">
+					<field name="payment_date" attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
+				</xpath>
+				<xpath expr='//group' position="after">
+					<field name="voucher_id" invisible="1"/>
+					<group name="invoice_scan" attrs="{'invisible':[('voucher_id', '=', False)]}">
+						<group string="Values">
+							<field name="total_amount_incl_vat" />
+							<field name="total_vat_amount_scanned" />
+							<field name="total_amount_excl_vat" />
+							<field name="difference" string="Control Value" />
+							<field name="default_currency_used" invisible="1"/>
+							<div class="alert alert-danger" attrs="{'invisible':[('default_currency_used', '=', False)]}">
+	                            OBS: The currency is set by the default and is not necessary the right currency.
+	                        </div>
+						</group>
+						<group string="References">
+							<field name="purchase_reference" />
+							<field name="requestor" />
+						</group>
+					</group>
+				</xpath>
+				<xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
+					<field name="voucher_line_id" invisible="1" readonly="0" />
+				</xpath>
+				<xpath expr="//field[@name='invoice_line_ids']" position="attributes">		
+					<attribute name="context">{'type': type, 'journal_id': journal_id, 'partner_id': partner_id}</attribute>
+				</xpath>
+				<xpath expr='//sheet/div' position="before">
+					<div class="oe_button_box" name="button_box">
+	                   <button name="action_voucher_wizard"
+                           class="oe_stat_button"
+                           icon="fa-file-text-o"
+                           type="object"
+                           string="Scanned Voucher"
+                           attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>                   
+	                   <button name="action_voucher_lines_wizard"
+	                       class="oe_stat_button"
+	                       icon="fa-list"
+	                       type="object" 
+	                       attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}">
+	                       <field name="voucher_line_count" widget="statinfo"/>
+	                   </button>
+	                   <button name="toggle_voucher_active" 
+	                   		class="oe_stat_button oe_edit_only"
+	                   		icon="fa-copy"
+							type="object"
+							attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}">
+                           <field name="voucher_active" widget="boolean_button" options='{"terminology": {
+                                    "string_true": "Voucher Lines",
+                                    "hover_true": "Remove Voucher Lines",
+                                    "string_false": "No Voucher Lines",
+                                    "hover_false": "Use Voucher Lines"
+                                }}'/>
+                       </button>
+                       <field name="scanning_provider_id" invisible="1"/>
+                       <button name="%(action_view_invoice_scan_support)d"
+	                       class="oe_stat_button"
+	                       icon="fa-envelope"
+	                       type="action"
+	                       context="{'default_scanning_provider_id': scanning_provider_id}"
+	                       string="Improve Scan"
+	                       attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
+	               </div>
+                </xpath>
+			</field>
+		</record>
+	</data>
+</odoo>
