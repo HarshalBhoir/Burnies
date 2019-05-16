@@ -4,6 +4,7 @@
 		<xpath expr="." position="inside">
 			<link href="/pragtech_crm_activity/static/src/css/activity.css" rel="stylesheet" type="text/css"/>
 			<script type="text/javascript" src="/pragtech_crm_activity/static/src/js/activity.js"></script>
+			<script type="text/javascript" src="/pragtech_crm_activity/static/src/js/dialog.js"></script>
 			<script type="text/javascript" src="/pragtech_crm_activity/static/src/js/activity_renderer.js"></script>
 		</xpath>
 	</template>

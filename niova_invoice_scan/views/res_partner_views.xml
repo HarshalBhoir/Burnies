@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Author      : Niova IT IVS (<https://niova.dk/>) -->
+<!-- Copyright(c): 2018-Present Niova IT IVS -->
+<!-- License URL : https://invoice-scan.com/license/ -->
+<!-- All Rights Reserved. -->
+<odoo>
+	<data>
+		<record id="invoice_scan_partner_form" model="ir.ui.view">
+			<field name="name">account.invoice.res.partner</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<xpath expr='//field[@name="parent_id"]' position="before">
+					<field name="alias" placeholder="Alias" attrs="{'invisible': [('is_company','!=', True)]}"/>
+				</xpath>
+			</field>
+		</record>
+		<record id="invoice_scan_view_partner_property_form" model="ir.ui.view">
+			<field name="name">approval.res.partner</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="account.view_partner_property_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//group[@name='accounting_entries']" position="before">
+                    <group string="Purchase" name="acc_purchase" groups="account.group_account_user">
+                        <field name="property_default_expense_account_id"
+	                           attrs="{'required': [('property_auto_apply_single_invoice_line','=', True)]}"/>
+	                    <field name="property_default_invoice_line_tax_id" 
+                       	       attrs="{'required': [('property_auto_apply_single_invoice_line','=', True)]}"/>
+                        <field name="property_default_invoice_line_description" 
+                      		   attrs="{'required': [('property_auto_apply_single_invoice_line','=', True)], 'invisible': [('property_auto_apply_single_invoice_line','!=', True)]}"/>
+                      	<label for="property_auto_validate_invoice" string="Automation"/>
+                        <div class="oe_form_many2many_checkboxes o_form_field">
+                            <div>
+                            	<field name="property_auto_apply_voucher_lines" nolabel="1"/>
+                            	<label for="property_auto_apply_voucher_lines"/>
+                            </div>
+                            
+                        	<div attrs="{'invisible': [('property_auto_apply_voucher_lines','!=', True)]}">
+	                            <field name="property_auto_validate_invoice" nolabel="1"/>
+	                            <label for="property_auto_validate_invoice"/>
+                            </div>
+                            
+                            <div>
+                            	<field name="property_auto_apply_single_invoice_line" 
+                            	       nolabel="1"/>
+                            	<label for="property_auto_apply_single_invoice_line"/>
+                            </div>
+                        </div>
+                    </group>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>
