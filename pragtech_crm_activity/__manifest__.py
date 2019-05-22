@@ -10,7 +10,9 @@
     'data': [
         'views/mail_activity_views.xml',
         'views/crm_lead_views.xml',
+        'views/calendar_views.xml',
         'views/template.xml',
+       
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True, 
