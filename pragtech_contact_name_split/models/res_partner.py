@@ -20,8 +20,8 @@ class Partner(models.Model):
     x_pk_contact = fields.Char('PK contact')
     x_sk_relatie = fields.Char('SK relatie')
     x_birthdate = fields.Date('Birth date')
-    x_house_number =fields.Char('House Number')
-    x_house_number_extension =fields.Char("House Number Extension")
+#     x_house_number =fields.Char('House Number')
+#     x_house_number_extension =fields.Char("House Number Extension")
     
     _sql_constraints = [
         ('check_name',"CHECK( (type='contact') or (type!='contact') )", 'Contacts require a name.'),

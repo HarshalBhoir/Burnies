@@ -36,12 +36,12 @@
 		  	<field name='x_birthdate' attrs="{'invisible' : [('is_company', '=',True)]}"/>
 		  </xpath>
 		  
-		  <xpath expr="//form/sheet/group/group/div/field[@name='street']" position="before">
+		 <!--  <xpath expr="//form/sheet/group/group/div/field[@name='street']" position="before">
 		  	<field name="x_house_number" placeholder="House Number" class="o_address_city"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)],'invisible' : [('is_company', '=',True)]}"/>
             <field name="x_house_number_extension" placeholder="House Number Extension" class="o_address_city"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)],'invisible' : [('is_company', '=',True)]}"/>                        
-		  </xpath>
+		  </xpath> -->
 		  
 		</field>
 	</record>
