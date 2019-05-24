@@ -30,7 +30,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='mymeetings']" position="after">
                 <filter string="Done Activities" help="Done Activities" name="is_activity_done" domain="[('is_activity_done','=',True)]"/>
-                <filter string="Due Activities" help="Due Activities" name="is_activity_done" domain="[('is_activity_done','=',False)]"/>
+                <filter string="Open Activities" help="Open Activities" name="is_activity_done" domain="[('is_activity_done','=',False)]"/>
             </xpath>
         </field>
     </record>

@@ -26,22 +26,23 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name',"CHECK( (type='contact') or (type!='contact') )", 'Contacts require a name.'),
     ]
-
+     
     @api.model
     def create(self, vals):
-#         print("innnnnnnnnnnnnnnnnnnnnnnnnnn")
-#         if vals.get('is_company')==False:
-#             print("######################3")
-        if vals.get('x_first_name') and vals.get('x_middle_name') and vals.get('x_last_name'):
-            vals.update({'name':vals.get('x_first_name')+' '+vals.get('x_middle_name')+' '+vals.get('x_last_name')})
-        elif vals.get('x_first_name') and vals.get('x_last_name') and not vals.get('x_middle_name'):
-            vals.update({'name':vals.get('x_first_name')+' '+vals.get('x_last_name')})
-        elif vals.get('x_middle_name') and vals.get('x_last_name') and not vals.get('x_first_name'):
-            vals.update({'name':vals.get('x_middle_name')+' '+vals.get('x_last_name')})
+        partner=self.env['res.partner'].search([('x_pk_contact','=',vals.get('x_pk_contact'))])
+        if not partner:
+            if vals.get('x_first_name') and vals.get('x_middle_name') and vals.get('x_last_name'):
+                vals.update({'name':vals.get('x_first_name')+' '+vals.get('x_middle_name')+' '+vals.get('x_last_name')})
+            elif vals.get('x_first_name') and vals.get('x_last_name') and not vals.get('x_middle_name'):
+                vals.update({'name':vals.get('x_first_name')+' '+vals.get('x_last_name')})
+            elif vals.get('x_middle_name') and vals.get('x_last_name') and not vals.get('x_first_name'):
+                vals.update({'name':vals.get('x_middle_name')+' '+vals.get('x_last_name')})
+            else:
+                vals.update({'name':vals.get('x_last_name')})
+            return super(Partner, self).create(vals) 
         else:
-            vals.update({'name':vals.get('x_last_name')})
-        return super(Partner, self).create(vals)   
-     
+            return partner[0]
+              
     @api.multi
     def write(self, vals):
         for partner in self:
