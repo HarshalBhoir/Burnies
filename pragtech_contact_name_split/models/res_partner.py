@@ -20,6 +20,7 @@ class Partner(models.Model):
     x_pk_contact = fields.Char('PK contact')
     x_sk_relatie = fields.Char('SK relatie')
     x_birthdate = fields.Date('Birth date')
+    is_imported = fields.Boolean('Impored')
 #     x_house_number =fields.Char('House Number')
 #     x_house_number_extension =fields.Char("House Number Extension")
     
@@ -80,4 +81,13 @@ class Partner(models.Model):
                         partner.write({'name':partner.x_middle_name+' '+vals.get('x_last_name')}) 
                     else:
                         partner.write({'name':vals.get('x_last_name')})                      
-        return super(Partner,self).write(vals)          
+        return super(Partner,self).write(vals)    
+    
+    
+    def update_parent(self): 
+        partners=self.env['res.partner'].search([])  
+        for partner in partners:
+            if partner.x_pk_relatie:
+                parent=self.env['res.partner'].search([('x_pk_conatct','=',partner.x_pk_relatie)])   
+                if parent:
+                    partner.write({'parent_id':parent.id})
