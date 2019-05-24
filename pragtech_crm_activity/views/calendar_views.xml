@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<odoo>
+
+	<record id="view_calendar_event_form_crm_inherit" model="ir.ui.view">
+		<field name="name">calendar.event.form.inherit</field>
+        <field name="model">calendar.event</field>
+		<field name="inherit_id" ref="calendar.view_calendar_event_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='location']" position="after">
+				 <field name="is_activity_done" string="Is Activity Done?" readonly="True"/>
+			</xpath>
+		</field>
+	</record>
+	
+	<record id="view_calendar_event_form_popup_crm_inherit" model="ir.ui.view">
+		<field name="name">calendar.event.form.inherit</field>
+        <field name="model">calendar.event</field>
+		<field name="inherit_id" ref="calendar.view_calendar_event_form_popup" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='alarm_ids']" position="after">
+				 <field name="is_activity_done" string="Is Activity Done?" readonly="True"/>
+			</xpath>
+		</field>
+	</record>
+	
+	<record id="view_calendar_event_search_crm_inherit" model="ir.ui.view">
+        <field name="name">calendar.event.search.inherit</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='mymeetings']" position="after">
+                <filter string="Done Activities" help="Done Activities" name="is_activity_done" domain="[('is_activity_done','=',True)]"/>
+                <filter string="Open Activities" help="Open Activities" name="is_activity_done" domain="[('is_activity_done','=',False)]"/>
+            </xpath>
+        </field>
+    </record>
+	
+	<record id="view_calendar_event_calendar_crm_inherit" model="ir.ui.view">
+		<field name="name">calendar.event.calendar.inherit</field>
+        <field name="model">calendar.event</field>
+		<field name="inherit_id" ref="calendar.view_calendar_event_calendar" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='is_highlighted']" position="after">
+				 <field name="is_activity_done" invisible="0"/>
+			</xpath>
+		</field>
+	</record>
+</odoo>

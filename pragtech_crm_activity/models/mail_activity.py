@@ -1,6 +1,5 @@
-from odoo import fields, api, models, tools
+from odoo import fields, api, models
 from collections import defaultdict
-from datetime import timedelta
 
 class MailActivity(models.Model):
     _inherit = 'mail.activity'
@@ -44,28 +43,6 @@ class MailActivity(models.Model):
             datetime_deadline = fields.Datetime.from_string(mail_id.date_deadline)
             mail_id.update({'datetime_deadline': datetime_deadline})
         return True
-    
-#     @api.multi
-#     def action_close_dialog(self):
-        #Overriden To Create & Update Calendar Event
-#         start = self.datetime_deadline
-#         stop = start + timedelta(minutes=30) 
-#         vals = {
-#             'name': self.summary or self.res_name,
-#             'allday': False,
-#             'start': start,
-#             'stop': stop,
-#             'res_id': self.env.context.get('default_res_id'),
-#             'res_model': self.env.context.get('default_res_model'),
-#             'description': self.note and tools.html2plaintext(self.note).strip() or '',
-#             'activity_ids': [(6, 0, self.ids)],
-#             'opportunity_id': self.res_id,
-#         }
-#         if self.calendar_event_id:
-#             self.calendar_event_id.write(vals)
-#         else:
-#             self.env['calendar.event'].create(vals)
-#         return {'type': 'ir.actions.act_window_close'}
     
     ###Overriden to add datetime and partner column changes###
     @api.model
@@ -122,9 +99,31 @@ class MailActivity(models.Model):
     
     def mark_as_done_rpc(self, res_id):
         """This RPC method is called from calendar event to mark activity as done"""
-        mail_activity_id = self.env['calendar.event'].search([('id', '=', res_id)])
-        for activity in mail_activity_id.activity_ids:
+        calendar_event_id = self.env['calendar.event'].search([('id', '=', res_id)])
+        if calendar_event_id:
+            calendar_event_id.update({'is_activity_done': True})
+        for activity in calendar_event_id.activity_ids:
             activity.action_done()
+    
+    def action_feedback(self, feedback=False):
+        """This Method is overridden to updata is_activity done flag on calendar event"""
+        message = self.env['mail.message']
+        if feedback:
+            self.write(dict(feedback=feedback))
+        for activity in self:
+            record = self.env[activity.res_model].browse(activity.res_id)
+            if activity.calendar_event_id:
+                activity.calendar_event_id.update({'is_activity_done': True})
+            record.message_post_with_view(
+                'mail.message_activity_done',
+                values={'activity': activity},
+                subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_activities'),
+                mail_activity_type_id=activity.activity_type_id.id,
+            )
+            message |= record.message_ids[0]
+
+        self.unlink()
+        return message.ids and message.ids[0] or False
 
 class MailActivityMixin(models.AbstractModel):
     _inherit = 'mail.activity.mixin'

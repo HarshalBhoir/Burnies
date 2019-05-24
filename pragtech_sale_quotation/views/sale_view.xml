@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+	<record id="view_sale_order_form_inherit" model="ir.ui.view">
+		<field name="name">sale.order.form.inherit</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form" />
+		<field name="arch" type="xml">
+		<xpath expr="//form/sheet/notebook/page[1]/field[@name='order_line']/tree[1]/field[@name='price_tax']"
+			position="after">
+			<field name="x_product_image" widget="image" width="40px" height="23px" string="Image"/>
+		</xpath>
+		<xpath expr="//form/sheet/notebook/page[1]/field[@name='order_line']/tree[1]/field[@name='discount']"
+			position="after">
+			<field name="x_discount_in_amount"/>
+		</xpath>
+		<xpath expr="//form/sheet/notebook/page[1]/field[@name='order_line']/form/group/group/div[@name='discount']"
+			position="after">
+			<field name="x_discount_in_amount"/>
+		</xpath> 
+		<xpath expr="//form/sheet/notebook/page[1]/group[@name='sale_total']"
+			position="replace">
+			 <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total" style="margin-right: 32px;">
+                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                        <label for="amount_total"/>
+                    </div>
+                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+             </group>
+		</xpath> 
+	</field>
+	</record>
+</odoo>

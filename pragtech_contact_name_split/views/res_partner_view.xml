@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="section_name_id" name="section name" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/pragtech_contact_name_split/static/src/css/contact.css"/>
+        </xpath>
+    </template>
+	<record id="view_partner_form_inherit" model="ir.ui.view">
+		<field name="name">res.partner.form.inherit</field>
+		<field name="model">res.partner</field>
+		<field name="inherit_id" ref="base.view_partner_form" />
+		<field name="arch" type="xml">
+		  <xpath expr="//form/sheet/div/h1/field[@name='name']"
+			position="replace">
+               <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', True)],'invisible' : [('is_company', '=', False)]}"/>
+                <div class="row"  attrs="{'invisible' : [('is_company', '=',True)]}">
+                  <div class="o_address_format indivitual-section" style="margin-left: 15px;">
+                    <field name="x_gender" class="o_address_city" style="margin-right: 5px; width:15%; font-size: 15px;" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', False)]}"/>
+                	<field name="x_first_name" class="o_address_city" placeholder="FirstName"  style="margin-right: 5px; width:24%; font-size: 15px;" />
+                    <field name="x_middle_name" class="o_address_city" placeholder="MiddleName"  style="margin-right: 5px; width:24%; font-size: 15px;"/>
+                    <field name="x_last_name" class="o_address_city" placeholder="LastName"  style="margin-right: 5px; width:24%; font-size: 15px; padding-right: 0px;" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', False)]}"/>
+                    </div>
+                </div> 
+		  </xpath>
+		  <xpath expr="//form/sheet/div[2]/div"
+		  	position="before">
+		  	  <group>
+		   	    <field name='x_call_customer' attrs="{'invisible' : [('is_company', '=',True)]}"/>
+                <field name='x_informality_allowed' attrs="{'invisible' : [('is_company', '=',True)]}"/>
+                <field name='x_salutation' attrs="{'invisible' : [('is_company', '=',True)]}"/>
+               </group>
+		  </xpath>
+		  <xpath expr="//form/sheet/group/group/field[@name='vat']" position="after">
+		  	<field name="x_pk_contact" attrs="{'invisible' : [('is_company', '=',True)]}"/>
+		  	<field name="x_sk_relatie" attrs="{'invisible' : [('is_company', '=',True)]}"/>
+		  	<field name='x_birthdate' attrs="{'invisible' : [('is_company', '=',True)]}"/>
+		  	<field name='is_imported' invisible="1"/>
+		  	<button name='update_parent' type='object' string='Update Parent' invisible="1"/>
+		  </xpath>
+		  
+		 <!--  <xpath expr="//form/sheet/group/group/div/field[@name='street']" position="before">
+		  	<field name="x_house_number" placeholder="House Number" class="o_address_city"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)],'invisible' : [('is_company', '=',True)]}"/>
+            <field name="x_house_number_extension" placeholder="House Number Extension" class="o_address_city"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)],'invisible' : [('is_company', '=',True)]}"/>                        
+		  </xpath> -->
+		  
+		</field>
+	</record>
+</odoo>
+		
