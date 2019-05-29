@@ -1,5 +1,12 @@
 from odoo import api, fields, models ,_
 
+class SaleOrder(models.Model):
+    _inherit ="sale.order"
+    
+    x_amount_total_excl_vat = fields.Monetary(string='Amount Total Excluding Vat')
+    x_amount_total_incl_vat = fields.Monetary(string='Amount Total Including Vat')
+    x_amount_total_vat = fields.Monetary(string='Amount Total Vat')
+
 class SaleOrderLine(models.Model):
     _inherit ="sale.order.line"
     

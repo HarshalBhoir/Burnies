@@ -30,8 +30,7 @@ class Partner(models.Model):
      
     @api.model
     def create(self, vals):
-        partner=self.env['res.partner'].search([('x_pk_contact','=',vals.get('x_pk_contact'))])
-        if not partner:
+        if  vals.get('is_company')==False:
             if vals.get('x_first_name') and vals.get('x_middle_name') and vals.get('x_last_name'):
                 vals.update({'name':vals.get('x_first_name')+' '+vals.get('x_middle_name')+' '+vals.get('x_last_name')})
             elif vals.get('x_first_name') and vals.get('x_last_name') and not vals.get('x_middle_name'):
@@ -41,8 +40,7 @@ class Partner(models.Model):
             else:
                 vals.update({'name':vals.get('x_last_name')})
             return super(Partner, self).create(vals) 
-        else:
-            return partner[0]
+        return super(Partner, self).create(vals) 
               
     @api.multi
     def write(self, vals):

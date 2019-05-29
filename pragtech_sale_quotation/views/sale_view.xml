@@ -19,6 +19,7 @@
 		</xpath> 
 		<xpath expr="//form/sheet/notebook/page[1]/group[@name='sale_total']"
 			position="replace">
+			
 			 <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total" style="margin-right: 32px;">
                     <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
@@ -27,7 +28,19 @@
                     </div>
                     <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
              </group>
+             
 		</xpath> 
+		<xpath expr="//form/sheet/notebook/page[1]/field[@name='note']"
+			position="before">
+			 <group class="oe_subtotal_footer oe_right"  name="sale_total_vat" style="margin-right: 10px;">
+                   <field name="x_amount_total_excl_vat" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="x_amount_total_incl_vat" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                        <label for="x_amount_total_vat"/>
+                    </div>
+                    <field name="x_amount_total_vat" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+             </group> 
+			</xpath>
 	</field>
 	</record>
 </odoo>
