@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class InvoiceScanScheduler(models.AbstractModel):
     _name = 'invoicescan.scheduler'
+    _description = 'Invoice Scan Scheduler'
     
     @api.model
     def process_scanned_vouchers(self):

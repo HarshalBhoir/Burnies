@@ -14,6 +14,7 @@ _invoice_scan_services = {}
 
 class InvoiceScanManager(models.AbstractModel):
     _name = 'invoicescan.manager'
+    _description = 'Invoice Scan Manager'
     
     def activate(self, client_secret):
         global _invoice_scan_services

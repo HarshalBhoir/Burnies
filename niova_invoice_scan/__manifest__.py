@@ -7,7 +7,7 @@
 #################################################################################
 {
     'name': "Invoice Scan (100% correct)",
-    'version': '1.0.11',
+    'version': '1.0.13',
     'author': "Niova IT",
     'category': 'Accounting',
     'website': 'niova.dk',

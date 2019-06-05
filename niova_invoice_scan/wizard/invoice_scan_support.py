@@ -14,6 +14,7 @@ TO_EMAIL = 'support@bilagscan.dk'
 
 class InvoiceScanSupport(models.TransientModel):
     _name = 'invoicescan.support'
+    _description = 'Invoice Scan Support'
     
     name = fields.Char('Name')
     note = fields.Text('Note', required=True)

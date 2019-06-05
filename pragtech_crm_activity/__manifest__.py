@@ -6,12 +6,14 @@
     'website': 'http://www.pragtech.co.in',
     'category': 'CRM',
     'summary': """This module adds and modify CRM Module functionality""",
-    'depends': ['base', 'crm', 'mail'],
+    'depends': ['base', 'crm', 'mail','calendar'],
     'data': [
+        'data/mail_data.xml',
         'views/mail_activity_views.xml',
         'views/crm_lead_views.xml',
         'views/calendar_views.xml',
         'views/template.xml',
+       
        
     ],
     'qweb': ['static/src/xml/*.xml'],
