@@ -1,4 +1,4 @@
-from odoo import fields, api, models
+from odoo import fields, api, models,tools,_
 from collections import defaultdict
 
 class MailActivity(models.Model):
@@ -124,6 +124,22 @@ class MailActivity(models.Model):
 
         self.unlink()
         return message.ids and message.ids[0] or False
+    
+    
+    @api.multi
+    def action_create_calendar_event(self):
+        self.ensure_one()
+        action = self.env.ref('calendar.action_calendar_event').read()[0]
+        action['context'] = {
+            'default_activity_type_id': self.activity_type_id.id,
+            'default_res_id': self.env.context.get('default_res_id'),
+            'default_res_model': self.env.context.get('default_res_model'),
+            'default_name': self.summary or self.res_name,
+            'default_description': self.note and tools.html2plaintext(self.note).strip() or '',
+            'default_activity_ids': [(6, 0, self.ids)],
+            'default_activity_name':self.activity_type_id.name or '',
+        }
+        return action
 
 class MailActivityMixin(models.AbstractModel):
     _inherit = 'mail.activity.mixin'

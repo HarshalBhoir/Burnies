@@ -8,6 +8,7 @@
 		<field name="arch" type="xml">
 			<xpath expr="//field[@name='location']" position="after">
 				 <field name="is_activity_done" string="Is Activity Done?" readonly="True"/>
+				 <field name="activity_name" invisible="1"/>
 			</xpath>
 		</field>
 	</record>
