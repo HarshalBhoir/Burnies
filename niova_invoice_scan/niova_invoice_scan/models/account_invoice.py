@@ -138,7 +138,7 @@ class AccountInvoice(models.Model):
             vals = self._add_journal(vals)
             
             # Create invoice
-            invoice = self.with_context(default_type=inv_type, type=inv_type).create(vals)
+            invoice = self.with_context(default_type=inv_type, type=inv_type, company_id=vals.get('company_id'), force_company=vals.get('company_id')).create(vals)
             invoice._onchange_payment_term_date_invoice()
             voucher.invoice_id = invoice.id
       
@@ -226,14 +226,14 @@ class AccountInvoice(models.Model):
     @api.multi
     def _add_fik(self, vals, voucher):
         if voucher.payment_code_id and voucher.payment_id and voucher.joint_payment_id:
-            if 'fik_number' in self._fields:
+            if self._fields.get('fik_number', False):
                 vals['fik_number'] = '+%s<%s+%s<' % (voucher.payment_code_id, voucher.payment_id, voucher.joint_payment_id)
             
-            if 'fik_payment_code' in self._fields:
+            if self._fields.get('fik_payment_code', False) and voucher.payment_code_id in self._fields.get('fik_payment_code').selection:
                 vals['fik_payment_code'] = voucher.payment_code_id
-            if 'fik_payment_id' in self._fields:
+            if self._fields.get('fik_payment_id', False):
                 vals['fik_payment_id'] = voucher.payment_id
-            if 'fik_creditor_id' in self._fields:
+            if self._fields.get('fik_creditor_id', False):
                 vals['fik_creditor_id'] = voucher.joint_payment_id
         return vals
     
@@ -345,7 +345,7 @@ class AccountInvoice(models.Model):
         line_values = {'invoice_id': self.id,
                        'name': self.partner_id.property_default_invoice_line_description,
                        'account_id': self.partner_id.property_default_expense_account_id,
-                       'price_unit': self.total_amount_excl_vat,
+                       'price_unit': self.total_amount_excl_vat if self.total_amount_excl_vat else self.total_amount_incl_vat,
                        'invoice_line_tax_ids': [(6, 0, self.partner_id.property_default_invoice_line_tax_id._ids)],
                        'quantity': 1}
         new_line = self.env['account.invoice.line'].new(line_values)
@@ -423,7 +423,7 @@ class AccountInvoice(models.Model):
     
     @api.multi
     def _auto_validate(self):
-        if self.partner_id.property_auto_validate_invoice and self.difference == 0 and self.total_amount_excl_vat > 0 and self.partner_id:
+        if self.partner_id.property_auto_validate_invoice and self.difference == 0 and self.total_amount_incl_vat > 0 and self.partner_id:
             try:
                 self.action_invoice_open()
                 self.env.cr.commit()
@@ -464,6 +464,12 @@ class AccountInvoiceLine(models.Model):
     voucher_id = fields.Many2one('invoicescan.voucher',related='voucher_line_id.voucher_id', string='Scanned Voucher', store=False, readonly=True, related_sudo=False,
         help='Associated Scanned Voucher.')
     
+    @api.onchange('account_id')
+    def _onchange_account_id(self):
+        super(AccountInvoiceLine, self)._onchange_account_id()
+        if not self.product_id and self.partner_id and self.partner_id.property_default_invoice_line_tax_id:
+            self.invoice_line_tax_ids = [(6, 0, self.partner_id.property_default_invoice_line_tax_id._ids)]
+
     @api.onchange('uom_id')
     def _onchange_uom_id(self):
         old_price_unit = False

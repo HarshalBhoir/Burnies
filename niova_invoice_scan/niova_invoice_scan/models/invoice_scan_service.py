@@ -26,6 +26,7 @@ ODOO_REDIRECT_URI = 'invoice_scan/authentication'
 
 class InvoiceScanService(models.AbstractModel):
     _name = 'invoicescan.service'
+    _description = 'Invoice Scan Service'
     
     expires_in = None
     access_token = str()

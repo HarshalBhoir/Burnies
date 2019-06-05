@@ -15,6 +15,7 @@ INVOICE_SCAN_API_BASE_URL = 'https://api.bilagscan.dk'
 
 class Bilagscan(models.AbstractModel):
     _name = 'invoicescan.bilagscan'
+    _description = 'Bilagscan'
     
     client_secrect = None
     

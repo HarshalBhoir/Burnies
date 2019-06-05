@@ -25,6 +25,7 @@ MONETARIES = ('total_vat_amount_scanned',
 
 class ScannedVoucher(models.Model):
     _name = 'invoicescan.voucher'
+    _description = 'Invoice Scan Voucher'
     _order = 'create_date desc'
     
     invoice_scan_provider = None
@@ -252,7 +253,8 @@ class ScannedVoucher(models.Model):
     
 class VoucherLines(models.Model):
     _name = 'invoicescan.voucher.line'
-        
+    _description = 'Invoice Scan Line'
+    
     quantity = fields.Float(string="Quantities", default=0.0)
     unit_price = fields.Float(string="Price pr. Unit", default=0)
     amount = fields.Monetary(string="Amount Scanned", default=0, currency_field='currency_id')
