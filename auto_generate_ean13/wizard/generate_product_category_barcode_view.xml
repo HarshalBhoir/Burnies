@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_generate_product_category_barcode" model="ir.ui.view">
+	    <field name="name">generate.barcode.product.category</field>
+	    <field name="model">generate.product.category.barcode</field>
+	    <field name="type">form</field>
+	    <field name="arch" type="xml">
+	        <form string="Generate Barcode For Product Inside Category">
+	            <group>
+	                <field name="override_barcode"/>
+	                <field name="apply_subcategory"/>
+	            </group>
+	            <footer>
+	                <button name="generate_barcode" string="Generate Barcode" type="object" class="oe_highlight"/>
+	                or
+	                <button string="Cancel" class="oe_link" special="cancel"/>
+	            </footer>
+	        </form>
+	    </field>
+	</record>
+	
+	<record id="action_generate_product_caegory_barcode" model="ir.actions.act_window">
+	    <field name="name">Generate EAN13 Barcode</field>
+	    <field name="type">ir.actions.act_window</field>
+	    <field name="res_model">generate.product.category.barcode</field>
+	    <field name="view_mode">form</field>
+	    <field name="view_id" ref="view_generate_product_category_barcode"/>
+	    <field name="target">new</field>
+	</record>
+	
+	<act_window id="action_generate_product_category_barcode"
+	            name="Generate Barcode"
+	            res_model="generate.product.category.barcode"
+	            binding_model="product.category"
+	            view_mode="form"
+	            target="new"
+                groups="auto_generate_ean13.group_allow_barcode_generation"/>
+
+</odoo>

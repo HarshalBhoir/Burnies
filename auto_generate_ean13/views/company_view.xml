@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<record id="view_company_ean_form" model="ir.ui.view">
+	    <field name="name">res.company.ean.form</field>
+	    <field name="model">res.company</field>
+	    <field name="inherit_id" ref="base.view_company_form"/>
+	    <field name="arch" type="xml">
+	        <notebook position="inside">
+	            <page string="Configuration">
+	                <group name="ean13_barcode" string="EAN13 Barcode" groups="auto_generate_ean13.group_allow_barcode_generation">
+	                    <group>
+	                        <field name="on_product_creation"/>
+	                        <field name="use_prefix"/>
+	                        <field name="prefix" attrs="{'invisible': [('use_prefix','!=', True)],'required': [('use_prefix','=', True)]}"/>
+	                        <field name="generate_method"/>
+	                        <field name="module_width"/>
+	                        <field name="module_height"/>
+	                        <field name="quiet_zone"/>
+	                    </group>
+	                    <group>
+	                        <field name="background" placeholder="Add Color Code like #FFFFFF or color name like white"/>
+	                        <field name="foreground" placeholder="Add Color Code like #000000 or color name like black"/>
+	                        <field name="write_text"/>
+	                        <field name="font_size" attrs="{'invisible': [('write_text','!=', True)]}"/>
+	                        <field name="text_distance" attrs="{'invisible': [('write_text','!=', True)]}"/>
+	                    </group>
+	                </group>
+	            </page>
+	        </notebook>
+	    </field>
+	</record>
+
+</odoo>
