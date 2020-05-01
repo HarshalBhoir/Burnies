@@ -23,7 +23,6 @@ class InvoiceScanScheduler(models.AbstractModel):
         threaded.start()
 
     @api.model
-    @api.multi
     def _process_scanned_vouchers(self):
         with api.Environment.manage():
             # Open new thread
@@ -43,14 +42,21 @@ class InvoiceScanScheduler(models.AbstractModel):
             self._cr.close()
     
     @api.model
-    @api.multi
     def run_invoice_scan(self):
         try:
+            # Set Super User
+            self = self.with_user(1)
+
+            # Upload raw vouchers
+            self.env['invoicescan.voucher'].upload_vouchers()
+
             # Get or update scanned vouchers
             self.env['invoicescan.voucher'].receive_scanned_vouchers()
             
             # Generate invoices for ready vouchers
-            self.env['account.invoice']._generate_invoices()
+            self.env['account.move'].generate_invoices()
+            
+            # Rematch draft vendor bills
+            self.env['account.move'].rematch_partner()
         except:
-            _logger.exception(sys.exc_info()[0])
-    
+            _logger.exception(sys.exc_info()[1])

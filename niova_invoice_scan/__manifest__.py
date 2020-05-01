@@ -6,26 +6,36 @@
 # All Rights Reserved.
 #################################################################################
 {
-    'name': "Invoice Scan (100% correct)",
-    'version': '1.0.13',
+    'name': "Invoice Scan (100% correct scan of vendor bills)",
+    'version': '1.2.1',
     'author': "Niova IT",
     'category': 'Accounting',
     'website': 'niova.dk',
-    'summery': 'Invoice Scan automatically scans all relevant data from invoices, vendor bills and receipts regardless of format with 100% accuracy, so digitalization of your workflow in Odoo becomes complete.',
+    'summery': 'Invoice Scan automatically scans all relevant data from invoices, vendor bills and receipts with 100% accuracy, so digitalization of your Vendor Bill workflow in Odoo becomes complete.',
     'demo': [],
-    'depends': ['base_setup', 'account', 'document'],
-    'description': """Invoice Scan automatically scans all relevant data from invoices, vendor bills and receipts regardless of format with 100% accuracy, so digitalization of your workflow in Odoo becomes complete.""",
+    'depends': ['base_setup', 'account', 'attachment_indexation'],
+    'description': """Invoice Scan automatically scans all relevant data from invoices, vendor bills and receipts with 100% accuracy, so digitalization of your Vendor Bill workflow in Odoo becomes complete.""",
     'data': [
-        'wizard/invoice_scan_support_view.xml',
+        'security/invoice_scan_security.xml',
         'security/ir.model.access.csv',
-        'data/ir_crone_data.xml',
         'data/invoicescan_data.xml',
+        'data/ir_crone_data.xml',
+        'data/mail_data.xml',
         'data/mail_template_data.xml',
-        'views/assets.xml',
+        'wizard/account_invoice_change_company_view.xml',
+        'wizard/account_invoice_change_type_view.xml',
+        'wizard/account_invoice_control_view.xml',
+        'wizard/invoice_scan_activation_view.xml',
+        'wizard/invoice_scan_debitor_view.xml',
+        'wizard/invoice_scan_download_view.xml',
+        'wizard/invoice_scan_support_view.xml',
+        'wizard/invoice_scan_upload_view.xml',
         'views/account_invoice_views.xml',
-        'views/res_config_settings_views.xml',
+        'views/assets.xml',
         'views/invoice_scan_views.xml',
-        'views/res_partner_views.xml'
+        'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
+        'views/invoice_scan_menuitem.xml',
     ],
     'images': [
         'static/description/banner.png',
@@ -34,6 +44,6 @@
         "static/src/xml/account_invoice.xml"
     ],
     'installable': True,
-    'application': False,
+    'application': True,
     "license":"OPL-1"
 }

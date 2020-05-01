@@ -23,19 +23,24 @@
 			<field name="name">invoice.scan.voucher</field>
 			<field name="model">invoicescan.voucher</field>
 			<field name="arch" type="xml">
-				<tree string="Voucher Lines" create="false" edit="false" delete="false">
+				<tree string="Voucher" create="false" edit="false">
 					<field name="voucher_id" />					
-					<field name="uploaded_by_email" />
+					<field name="upload_user_id" />
+					<field name="upload_email" />
 					<field name="company_name" />
 					<field name="total_amount_incl_vat" />
 					<field name="create_date" />
 					<field name="state" />
-					<field name="has_invoice" />
 					<button name="action_refresh_voucher"
                             string="Refresh Voucher"
                             icon="fa-refresh"
                             type="object"
-                            attrs="{'invisible':[('state', '=', 'successful')]}"/>
+                            attrs="{'invisible':[('state', 'in', ('upload', 'ready', 'generated', 'failed', 'deleted'))]}"/>
+					<button name="action_create_invoice"
+                            string="Create Invoice"
+                            icon="fa-plus"
+                            type="object"
+                            attrs="{'invisible':[('state', 'not in', ('deleted', 'failed'))]}"/>
 				</tree>
 			</field>
 		</record>
@@ -45,59 +50,84 @@
 			<field name="model">invoicescan.voucher</field>
 			<field name="arch" type="xml">
 				<form>
-					<group string="Scanned Values">
-						<field name="voucher_id" />
-						<field name="country" />
-						<field name="company_name" />
-						<field name="voucher_type" />
-						<field name="joint_payment_id" />
-						<field name="company_vat_reg_no" />
-						<field name="danish_industry_code" />
-						<field name="payment_id" />
-						<field name="total_vat_amount_scanned" />
-						<field name="currency" />
-						<field name="voucher_number" />
-						<field name="total_amount_incl_vat" />
-						<field name="payment_date" />
-						<field name="payment_code_id" />
-						<field name="invoice_date" />
-						<field name="total_amount_excl_vat" />
-						<field name="creditor_number" />
-						<field name="order_number" />
-						<field name="gln_number" />
-						<field name="payment_reg_number" />
-						<field name="payment_account_number" />
-						<field name="payment_iban" />
-						<field name="payment_swift_bic" />
-						<field name="reference" />
-						<field name="vat_rate" />
-						<field name="penny_difference" />
-						<field name="requestor" />
-						<field name="company_id" />
-					</group>
+					<header>
+						<field name="state" widget="statusbar" statusbar_visible="upload,waiting,ready,generated" />
+					</header>
+					<sheet string="Scanned Voucher">
+						<group>
+							<group string="Type and User">
+								<field name="voucher_type" />
+								<field name="upload_user_id" />
+								<field name="upload_email" />
+							</group>
+
+							<group string="Optional Fields">
+								<field name="note" />
+								<field name="payment_method" />
+							</group>
+
+							<group string="Scanned References">
+								<field name="voucher_id" />
+								<field name="reference" />
+								<field name="voucher_number" />
+								<field name="order_number" />
+							</group>
+
+							<group string="Scanned Amount Fields">
+								<field name="currency" />
+								<field name="total_vat_amount_scanned" />
+								<field name="total_amount_excl_vat" />
+								<field name="total_amount_incl_vat" />
+								<field name="vat_rate" />
+								<field name="penny_difference" />
+							</group>
+
+							<group string="Scanned Partner and Company Fields">
+								<field name="company_name" />
+								<field name="company_vat_reg_no" />
+								<field name="creditor_number" />
+								<field name="danish_industry_code" />
+								<field name="country" />
+								<field name="company_id" />
+							</group>
+
+							<group string="Scanned Payment Fields">
+								<field name="joint_payment_id" />
+								<field name="payment_id" />
+								<field name="payment_date" />
+								<field name="payment_code_id" />
+								<field name="invoice_date" />
+								<field name="payment_reg_number" />
+								<field name="gln_number" />
+								<field name="payment_account_number" />
+								<field name="payment_iban" />
+								<field name="payment_swift_bic" />
+							</group>
+							<group string="Error Messages">
+								<field name="error_message" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Scanned Voucher Lines">
+								<field name="voucher_line_ids"/>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="o_attachment_preview"/>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+						<field name="activity_ids" widget="mail_activity"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
 				</form>
 			</field>
 		</record>
 		
-		<record id="action_invoice_scan" model="ir.actions.act_window">
+		<record id="action_invoice_scan_voucher" model="ir.actions.act_window">
 			<field name="name">Scanned Vouchers</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">invoicescan.voucher</field>
-			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
     	</record>
-	
-		<!-- Top menu item -->
-	   	<menuitem id="menu_invoice_scan_root"
-	   			  name="Invoice Scan"
-	   		      parent="account.menu_finance_reports"
-	              sequence="6"/>
-			<!-- Sub menu item -->
-		   	<menuitem id="account_reports_invoice_scan_menu"
-		   			  name="Scanned Vouchers"
-		   			  parent="menu_invoice_scan_root"
-		   			  groups="account.group_account_invoice,account.group_account_user,account.group_account_manager"
-		              sequence="1"
-		              action="action_invoice_scan"/>
 	</data>
 </odoo>

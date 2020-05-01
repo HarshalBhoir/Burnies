@@ -6,7 +6,7 @@
 <odoo>
     <data>
         <record id="view_invoice_scan_support" model="ir.ui.view">
-            <field name="name">invoice_scan_support.form</field>
+            <field name="name">invoice.scan.support.form</field>
             <field name="model">invoicescan.support</field>
             <field name="arch" type="xml">
                 <form string="Invoice Scan Support">
@@ -28,7 +28,6 @@
         <record id="action_view_invoice_scan_support" model="ir.actions.act_window">
             <field name="name">Invoice Scan Support</field>
             <field name="res_model">invoicescan.support</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="context">{'default_scanning_provider_id': default_scanning_provider_id}</field>            
             <field name="view_id" ref="view_invoice_scan_support"/>

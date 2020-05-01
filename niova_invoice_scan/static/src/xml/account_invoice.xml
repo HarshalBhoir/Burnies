@@ -4,7 +4,7 @@
 <!-- License URL : https://invoice-scan.com/license/ -->
 <!-- All Rights Reserved. -->
 <templates>
-    <t t-extend="BillsListView.upload_button">
+    <t t-extend="BillsListView.buttons">
         <t t-jquery="button.o_button_upload_bill" t-operation="after">
             <button type="button" class="btn btn-secondary oe_sync_invoice_scan" accesskey="r">
 	            Sync Invoices

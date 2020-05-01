@@ -6,49 +6,50 @@
 <odoo>
 	<data>
 		<record id="invoice_scan_partner_form" model="ir.ui.view">
-			<field name="name">account.invoice.res.partner</field>
-			<field name="model">res.partner</field>
-			<field name="inherit_id" ref="base.view_partner_form" />
-			<field name="arch" type="xml">
-				<xpath expr='//field[@name="parent_id"]' position="before">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+            	<xpath expr='//field[@name="parent_id"]' position="before">
 					<field name="alias" placeholder="Alias" attrs="{'invisible': [('is_company','!=', True)]}"/>
 				</xpath>
-			</field>
-		</record>
-		<record id="invoice_scan_view_partner_property_form" model="ir.ui.view">
-			<field name="name">approval.res.partner</field>
-			<field name="model">res.partner</field>
-			<field name="inherit_id" ref="account.view_partner_property_form" />
-			<field name="arch" type="xml">
-				<xpath expr="//group[@name='accounting_entries']" position="before">
-                    <group string="Purchase" name="acc_purchase" groups="account.group_account_user">
-                        <field name="property_default_expense_account_id"
-	                           attrs="{'required': [('property_auto_apply_single_invoice_line','=', True)]}"/>
-	                    <field name="property_default_invoice_line_tax_id" 
-                       	       attrs="{'required': [('property_auto_apply_single_invoice_line','=', True)]}"/>
-                        <field name="property_default_invoice_line_description" 
-                      		   attrs="{'required': [('property_auto_apply_single_invoice_line','=', True)], 'invisible': [('property_auto_apply_single_invoice_line','!=', True)]}"/>
-                      	<label for="property_auto_validate_invoice" string="Automation"/>
-                        <div class="oe_form_many2many_checkboxes o_form_field">
-                            <div>
-                            	<field name="property_auto_apply_voucher_lines" nolabel="1"/>
-                            	<label for="property_auto_apply_voucher_lines"/>
-                            </div>
+				
+                <page name="sales_purchases" position="after">
+                    <page string="Invoice Scan" name="invoice_scan" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
+                        <group>
+                        	<group string="Automation" name="invoice_scan_automation">
+                        		<field name="property_invoice_automation" attrs="{'required': [('property_invoice_automation','!=', False)]}"/>
+                            </group>
                             
-                        	<div attrs="{'invisible': [('property_auto_apply_voucher_lines','!=', True)]}">
-	                            <field name="property_auto_validate_invoice" nolabel="1"/>
-	                            <label for="property_auto_validate_invoice"/>
-                            </div>
+                            <group string="Defaults" name="invoice_scan_settings">
+                                <field name="property_invoice_default_account_expense_id"
+                                       string="Invoice Line Expense Account"
+	                           		   attrs="{'required': [('property_invoice_automation','=', 'one_line')]}"/>
+			                    
+			                    <field name="property_invoice_default_line_tax_id" 
+                                       string="Invoice Line Tax"/>
+		                        
+		                        <field name="property_invoice_default_line_description" 
+                                       string="Invoice Line Description"
+		                      		   attrs="{'required': [('property_invoice_automation','=', 'one_line')]}"/>
+		                      	
+		                      	<field name="property_invoice_default_account_analytic_id" 
+                                       string="Invoice Line Analytic Account"
+		                      		   groups="analytic.group_analytic_accounting"/>
+                            </group>
                             
-                            <div>
-                            	<field name="property_auto_apply_single_invoice_line" 
-                            	       nolabel="1"/>
-                            	<label for="property_auto_apply_single_invoice_line"/>
-                            </div>
-                        </div>
-                    </group>
-				</xpath>
-			</field>
-		</record>
+                            <group string="Validation Criteria" name="invoice_scan_criteria">
+                                <field name="property_invoice_validation_deviation" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+			                    
+			                    <field name="property_invoice_validation_limit" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+		                        
+		                        <field name="property_invoice_validation_vat" />
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
 	</data>
 </odoo>

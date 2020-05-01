@@ -5,20 +5,19 @@
 <!-- All Rights Reserved. -->
 <odoo>
 	<data>
-		<record id="vendorbill_inherit_form" model="ir.ui.view">
-			<field name="model">account.invoice</field>
-			<field name="inherit_id" ref="account.invoice_supplier_form" />
+		<record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+			<field name="inherit_id" ref="account.view_move_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='partner_id']" position="before">
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="voucher_company_name" attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
 					<field name="duplicated_invoice_ids" 
 						   widget="many2many_tags"
     					   options="{'no_create': True}"
     					   attrs="{'invisible':['|', ('state', '!=', 'draft'), ('duplicated_invoice_ids', '=', [])]}"/>
 				</xpath>
-				<xpath expr="//field[@name='partner_id']" position="after">
-					<field name="voucher_company_name" attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
-				</xpath>
-				<xpath expr="//field[@name='date_due']" position="after">
+				<xpath expr="//field[@name='invoice_date_due']" position="after">
 					<field name="payment_date" attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
 				</xpath>
 				<xpath expr='//group' position="after">
@@ -28,7 +27,7 @@
 							<field name="total_amount_incl_vat" />
 							<field name="total_vat_amount_scanned" />
 							<field name="total_amount_excl_vat" />
-							<field name="difference" string="Control Value" />
+							<field name="control_value" string="Control Value" />
 							<field name="default_currency_used" invisible="1"/>
 							<div class="alert alert-danger" attrs="{'invisible':[('default_currency_used', '=', False)]}">
 	                            OBS: The currency is set by the default and is not necessary the right currency.
@@ -36,7 +35,6 @@
 						</group>
 						<group string="References">
 							<field name="purchase_reference" />
-							<field name="requestor" />
 						</group>
 					</group>
 				</xpath>
@@ -53,26 +51,7 @@
                            icon="fa-file-text-o"
                            type="object"
                            string="Scanned Voucher"
-                           attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>                   
-	                   <button name="action_voucher_lines_wizard"
-	                       class="oe_stat_button"
-	                       icon="fa-list"
-	                       type="object" 
-	                       attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}">
-	                       <field name="voucher_line_count" widget="statinfo"/>
-	                   </button>
-	                   <button name="toggle_voucher_active" 
-	                   		class="oe_stat_button oe_edit_only"
-	                   		icon="fa-copy"
-							type="object"
-							attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}">
-                           <field name="voucher_active" widget="boolean_button" options='{"terminology": {
-                                    "string_true": "Voucher Lines",
-                                    "hover_true": "Remove Voucher Lines",
-                                    "string_false": "No Voucher Lines",
-                                    "hover_false": "Use Voucher Lines"
-                                }}'/>
-                       </button>
+                           attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
                        <field name="scanning_provider_id" invisible="1"/>
                        <button name="%(action_view_invoice_scan_support)d"
 	                       class="oe_stat_button"
@@ -83,6 +62,42 @@
 	                       attrs="{'invisible':['|', ('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
 	               </div>
                 </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']" position="before">
+					<div class="oe_button_box" style="float: right; margin: -14px 0 4px 0;">
+				       <button name="action_add_single_line" 
+				       		class="btn btn-primary mr-1 oe_edit_only"
+				       		string="Add total line"
+				       		icon="fa-plus"
+							type="object"
+							attrs="{'invisible':['|','|','|',('partner_id', '=', False),('invoice_line_ids', '!=', []),('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
+				       <button name="action_add_scanned_lines" 
+				       		class="btn btn-primary oe_edit_only"
+				       		string="Add scanned lines"
+				       		icon="fa-plus"
+							type="object"
+							attrs="{'invisible':['|','|','|',('partner_id', '=', False),('invoice_line_ids', '!=', []),('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
+						<button name="action_clear_invoice_lines" 
+				       		class="btn btn-primary oe_edit_only"
+				       		string="Clear lines"
+				       		icon="fa-minus"
+							type="object"
+							attrs="{'invisible':['|','|','|',('partner_id', '=', False),('invoice_line_ids', '=', []),('state', '!=', 'draft'),('voucher_id', '=', False)]}"/>
+				   </div>
+				</xpath>
+                <xpath expr="//notebook/page//group/group/field[@name='company_id']" position="replace">
+					<label for="company_id" />
+					<button name="%(action_invoice_change_company)d"
+							class="oe_stat_button"
+	                        type="action"
+	                        required="True"
+	                        context="{'invoice_id': active_id, 'company_id': company_id}">
+	                        <div class="o_form_field">
+	                            <span class="o_stat_text">
+	                            	<field name="company_id" readonly="1" options="{'no_open': True}"/>
+                            	</span>
+	                        </div>
+	                </button>
+	            </xpath>
 			</field>
 		</record>
 	</data>

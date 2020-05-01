@@ -27,7 +27,17 @@ class Bilagscan(models.AbstractModel):
         return self.env['invoicescan.manager'].get_scan_service(self.client_secrect)
     
     @api.model
-    def get_vouchers(self, search):       
+    def upload_voucher(self, voucher_data):
+        headers = {'Content-Type': 'application/json',
+                   'Accept': 'application/json',
+                   'Authorization': self._get_token()}
+        uri = '/v1/organizations/%s/vouchers' % self._get_organization()
+        parms = json.dumps({"voucher_data": voucher_data})
+        status, content, request_time = self._request(uri, parms, headers, 'POST', response_format='bytes')
+        return json.loads(content.decode('utf-8')).get('data') if status else False
+
+    @api.model
+    def get_vouchers(self, search):
         headers = {'Accept': 'application/json',
                    'Authorization': self._get_token()}
 
@@ -39,19 +49,26 @@ class Bilagscan(models.AbstractModel):
         return {}
 
     @api.model
-    def get_conditional_vouchers(self, seen, state=False, offset=0, count=10):
+    def get_conditional_vouchers(self, offset=0, search_strings={}, count=10, seen='not_seen'):
         search = {}
-        search['seen'] = seen if seen else False
-        if state:
-            search['status'] = state    
+
+        if seen == 'not_seen':
+            search['seen'] = False
+        elif seen == 'seen':
+            search['seen'] = True
+            
         if offset:
             search['offset'] = offset
         if count:
             search['count'] = count 
+        
+        # Apply search string
+        for search_key, search_value in search_strings.items():
+            search[search_key] = search_value 
         return self.get_vouchers(search);
       
     @api.model
-    def get_voucher(self, voucher_id):        
+    def get_voucher(self, voucher_id):
         headers = {'Accept': 'application/json',
                    'Authorization': self._get_token()}
 
@@ -59,6 +76,17 @@ class Bilagscan(models.AbstractModel):
         status, content, _ = self._request(uri, {}, headers, 'GET')
         if status:
             return content['data']
+        return False
+
+    @api.model
+    def get_voucher_text(self, voucher_id):
+        headers = {'Accept': 'application/json',
+                   'Authorization': self._get_token()}
+
+        uri = '/v1/vouchers/%s/text' % (voucher_id)
+        status, content, _ = self._request(uri, {}, headers, 'GET')
+        if status:
+            return content['data']['text']
         return False
         
     @api.model

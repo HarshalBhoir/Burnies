@@ -16,7 +16,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 TIMEOUT = 20
-INVOICE_SCAN_CLIENT_ID = '92c8e0d6-f232-4c39-83d7-00198e92e12e'
+INVOICE_SCAN_CLIENT_ID = '0ce513f4-07f2-422a-8fe3-dbfd6b84e13a'
 INVOICE_SCAN_BASE_URL = 'https://api.invoice-scan.com/'
 INVOICE_SCAN_AUTH_ENDPOINT = 'oauth/authorize'
 INVOICE_SCAN_TOKEN_ENDPOINT = 'oauth/token'
@@ -44,7 +44,6 @@ class InvoiceScanService(models.AbstractModel):
             'target': 'new'
         }
         
-    @api.multi
     def get_access_token(self):
         if not self._get_refresh_token() and not self.get_organization():
             self._issue_access_token()
@@ -52,7 +51,6 @@ class InvoiceScanService(models.AbstractModel):
             self._refresh_access_token()
         return self._get_access_token()
         
-    @api.multi
     def _issue_access_token(self):
         uri, headers, data = self._get_token_request('invoice_scan', '')
         try:
@@ -66,10 +64,9 @@ class InvoiceScanService(models.AbstractModel):
         self._set_expires_datetime(int(content.get('expires_in', 0)))
         self._set_refresh_token(content.get('refresh_token', ''))
         self._set_organization(content.get('organization_id', ''))
-        self._set_setting('invoice_scan_mail_forward_address', content.get('mail_forward_address', ''))
+        self._set_setting('invoice_scan_active', True)
         self.env.cr.commit()
     
-    @api.multi
     def _refresh_access_token(self):
         uri, headers, data = self._get_token_request('refresh_token', '')
         try:
@@ -84,7 +81,6 @@ class InvoiceScanService(models.AbstractModel):
         self._set_refresh_token(content.get('refresh_token', ''))
         self._set_expires_datetime(int(content.get('expires_in', 0)))
             
-    @api.multi
     def request(self, uri, params={}, headers={}, request_type='GET'):
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !", (uri, type, headers, params))
 
@@ -102,13 +98,12 @@ class InvoiceScanService(models.AbstractModel):
             _logger.exception(error_message)
             raise Exception(_(error_message))
         except:
-            error_message  = 'Something went wrong with the request to Invoice Scan request. Error message: {error}'.format(error=sys.exc_info()[0]) 
+            error_message  = 'Something went wrong with the request to Invoice Scan request. Error message: {error}'.format(error=sys.exc_info()[1]) 
             _logger.exception(error_message)
             raise Exception(_(error_message))
 
         return (self._get_status(response), response, self._get_request_time(response, request_time))
     
-    @api.multi
     def _get_token_request(self, grant, scope):
         uri = INVOICE_SCAN_BASE_URL + INVOICE_SCAN_TOKEN_ENDPOINT
         headers = {'content-type': 'application/x-www-form-urlencoded'}
@@ -138,14 +133,12 @@ class InvoiceScanService(models.AbstractModel):
         }
         return uri.format(parms=werkzeug.url_encode(data))
 
-    @api.multi
     def _get_status(self, response): 
         response.raise_for_status()
         if int(response.status_code) in (204, 404):
             return False
         return True  
     
-    @api.multi
     def _get_request_time(self, response, request_time): 
         try:
             request_time = datetime.strptime(response.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
@@ -153,46 +146,36 @@ class InvoiceScanService(models.AbstractModel):
             pass
         return request_time
     
-    @api.multi
     def _set_access_token(self, token, token_type='Bearer'):
         self.token_type = token_type
         self.access_token = token
         
-    @api.multi
     def _get_access_token(self):
         if not self.access_token:
             return False
         return self.token_type + ' ' + self.access_token
             
-    @api.multi
     def _set_refresh_token(self, token):
         self.refresh_token = token
 
-    @api.multi
     def _get_refresh_token(self):
         return self.refresh_token
     
-    @api.multi
     def _set_organization(self, organization):
         self.organization = organization
         
-    @api.multi
     def get_organization(self):
         return self.organization
     
-    @api.multi
     def set_client_secret(self, client_secret):
         self.client_secrect = client_secret
     
-    @api.multi
     def _get_client_secret(self):
         return self.client_secrect
     
-    @api.multi
     def _set_expires_datetime(self, expires_in=0):
         self.expires_in = datetime.now() + timedelta(seconds=expires_in)
     
-    @api.multi   
     def _get_expires_datetime(self):
         if not self.expires_in:
             return datetime.now()

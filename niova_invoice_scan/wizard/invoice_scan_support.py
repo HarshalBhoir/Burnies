@@ -6,9 +6,6 @@
 # All Rights Reserved.
 #################################################################################
 from odoo import models, api, fields
-import logging
-
-_logger = logging.getLogger(__name__)
 
 TO_EMAIL = 'support@bilagscan.dk'
 
@@ -22,7 +19,6 @@ class InvoiceScanSupport(models.TransientModel):
     email_from = fields.Char('From Email')
     scanning_provider_id = fields.Integer('Voucher ID', readonly=True)
     
-    @api.multi        
     def action_send_email(self):
         self.name = self.env.user.name
         self.email_to = TO_EMAIL

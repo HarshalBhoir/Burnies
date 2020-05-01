@@ -5,11 +5,12 @@
 # License URL : https://invoice-scan.com/license/
 # All Rights Reserved.
 #################################################################################
-from . import res_config_settings
-from . import res_partner
-from . import account_invoice
+from . import account
 from . import bilagscan
-from . import scanned_voucher
+from . import invoice_scan_manager
 from . import invoice_scan_scheduler
 from . import invoice_scan_service
-from . import invoice_scan_manager
+from . import res_company
+from . import res_config_settings
+from . import res_partner
+from . import scanned_voucher
