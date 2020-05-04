@@ -1,3 +1,9 @@
+`1.2.2`
+-------
+Bug Fixes:
+	- Fixed issue from last update for not importing scanned vouchers.
+	- Fixed fik_payment_code was not added.
+
 `1.2.1`
 -------
 New Version:

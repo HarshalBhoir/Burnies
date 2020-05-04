@@ -7,7 +7,7 @@
 #################################################################################
 {
     'name': "Invoice Scan (100% correct scan of vendor bills)",
-    'version': '1.2.1',
+    'version': '1.2.2',
     'author': "Niova IT",
     'category': 'Accounting',
     'website': 'niova.dk',

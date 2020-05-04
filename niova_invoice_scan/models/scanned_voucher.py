@@ -131,7 +131,7 @@ class ScannedVoucher(models.Model):
     seen = fields.Boolean(string='Voucher Reported', default=False)
     
     # Invoice Fields
-    invoice_id = fields.Many2one('account.invoice', string='Invoice Id', readonly=True)
+    invoice_id = fields.Many2one('account.move', string='Invoice Id', readonly=True)
     error_message = fields.Text(string='Invoice Generation Error', readonly=True)
 
     # Computed Fields

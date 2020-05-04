@@ -288,7 +288,7 @@ class AccountMove(models.Model):
             if self._fields.get('fik_number', False):
                 vals['fik_number'] = '+%s<%s+%s<' % (voucher.payment_code_id, voucher.payment_id, voucher.joint_payment_id)
             
-            if self._fields.get('fik_payment_code', False) and voucher.payment_code_id in self._fields.get('fik_payment_code').selection:
+            if self._fields.get('fik_payment_code', False) and voucher.payment_code_id in dict(self._fields.get('fik_payment_code').selection):
                 vals['fik_payment_code'] = voucher.payment_code_id
             if self._fields.get('fik_payment_id', False):
                 vals['fik_payment_id'] = voucher.payment_id
