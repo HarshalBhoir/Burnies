@@ -3,7 +3,7 @@
 {
     # Module information
     'name': 'Product Image for Sale',
-    'version': '13.0.1.0.1',
+    'version': '13.0.1.0.2',
     'category': 'Sales Management',
     'sequence': '1',
     'summary': """Product Image for Quatation/Sale Reports.""",
