@@ -3,7 +3,7 @@
 {
     # Module information
     'name': 'Product Image for Sale',
-    'version': '13.0.1.0.0',
+    'version': '13.0.1.0.1',
     'category': 'Sales Management',
     'sequence': '1',
     'summary': """Product Image for Quatation/Sale Reports.""",
@@ -24,6 +24,7 @@
     'data': [
         'views/sale_product_view.xml',
         'views/report_saleorder.xml',
+		'views/sale_portal_content.xml',
     ],
 
     # Techical
