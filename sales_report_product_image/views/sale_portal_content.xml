@@ -9,7 +9,7 @@
          <xpath expr="//td[@id='product_name']" position="before">
              <td>
               <t t-if="line.product_id.image_1920">
-                <img t-attf-src="data:image/*;base64,{{line.product_id.image_1920}}" style="width:30%;height:30%"/>  
+                <img t-attf-src="data:image/*;base64,{{line.product_id.image_1920}}" style="max-height: 50px;"/>  
               </t>
             </td>
         </xpath>
